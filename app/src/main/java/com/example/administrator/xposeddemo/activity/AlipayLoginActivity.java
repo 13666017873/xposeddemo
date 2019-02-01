@@ -1,4 +1,4 @@
-package com.example.administrator.xposeddemo;
+package com.example.administrator.xposeddemo.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -11,6 +11,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.example.administrator.xposeddemo.R;
 import com.example.administrator.xposeddemo.utils.MyWebViewClient;
 
 public class AlipayLoginActivity extends Activity {
