@@ -1,8 +1,12 @@
 package com.example.administrator.xposeddemo.hook;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.google.gson.Gson;
 
@@ -37,35 +41,86 @@ public class MainHook implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam loadPackageParam) {
 
-        ClassLoader classLoader = loadPackageParam.classLoader;
-
         try {
             if (loadPackageParam.packageName.equals("com.eg.android.AlipayGphone")) {
-                Class<?> clazz = classLoader.loadClass("com.alipay.mobile.nebulabiz.rpc.H5RpcUtil");
-                Class<?> h5PageClazz = classLoader.loadClass("com.alipay.mobile.h5container.api.H5Page");
-                Class<?> jSONObjectClazz = classLoader.loadClass("com.alibaba.fastjson.JSONObject");
 
-                XposedHelpers.findAndHookMethod(clazz, "rpcCall", String.class, String.class, String.class, boolean.class,
-                        jSONObjectClazz, String.class, boolean.class,
-                        h5PageClazz, int.class, String.class, boolean.class, int.class, new XC_MethodHook() {
-                            @Override
-                            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                                super.beforeHookedMethod(param);
-                            }
+                XposedHelpers.findAndHookMethod(Activity.class, "onCreate", Bundle.class, new XC_MethodHook(){
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        super.beforeHookedMethod(param);
 
-                            @Override
-                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                super.afterHookedMethod(param);
+                        Context context = (Context) param.args[0];
+                        ClassLoader classLoader = context.getClassLoader();
 
-                                Object resp = param.getResult();
-                                if (resp != null) {
-                                    Method method = resp.getClass().getMethod("getResponse", new Class<?>[]{});
-                                    String response = (String) method.invoke(resp, new Object[]{});
+                        String thisObject = param.thisObject.toString();
+                        XposedBridge.log("activity=========" + thisObject);
+                        Class<?> MspContainerActivity = XposedHelpers.findClass("com.alipay.mobile.quinox.activity.QuinoxContext", classLoader);
 
-                                    XposedBridge.log(response);
-                                }
-                            }
-                        });
+                        for(Method method :  MspContainerActivity.getMethods()){
+                            XposedBridge.log("method=========" + method);
+                        }
+//
+//                        if(clazz.getName().equals("com.alipay.android.msp.ui.views.MspContainerActivity")){
+//                            for(Method method : clazz.getMethods()){
+//                                XposedBridge.log("method============" + method);
+//                            }
+//                        }
+
+//                        XposedBridge.hookAllMethods(MspContainerActivity, "setTitle", new XC_MethodHook(){
+//
+//                            @Override
+//                            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//                                super.beforeHookedMethod(param);
+//                                param.setResult("111");
+//                            }
+//
+//                            @Override
+//                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//                                super.afterHookedMethod(param);
+//                            }
+//                        });
+
+
+                    }
+
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        super.afterHookedMethod(param);
+                    }
+                });
+
+
+
+
+
+
+
+
+//                Class<?> clazz = classLoader.loadClass("com.alipay.mobile.nebulabiz.rpc.H5RpcUtil");
+//                Class<?> h5PageClazz = classLoader.loadClass("com.alipay.mobile.h5container.api.H5Page");
+//                Class<?> jSONObjectClazz = classLoader.loadClass("com.alibaba.fastjson.JSONObject");
+
+//                XposedHelpers.findAndHookMethod(clazz, "rpcCall", String.class, String.class, String.class, boolean.class,
+//                        jSONObjectClazz, String.class, boolean.class,
+//                        h5PageClazz, int.class, String.class, boolean.class, int.class, new XC_MethodHook() {
+//                            @Override
+//                            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//                                super.beforeHookedMethod(param);
+//                            }
+//
+//                            @Override
+//                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//                                super.afterHookedMethod(param);
+//
+//                                Object resp = param.getResult();
+//                                if (resp != null) {
+//                                    Method method = resp.getClass().getMethod("getResponse", new Class<?>[]{});
+//                                    String response = (String) method.invoke(resp, new Object[]{});
+//
+//                                    XposedBridge.log(response);
+//                                }
+//                            }
+//                        });
             }
 
         } catch (Exception e) {
