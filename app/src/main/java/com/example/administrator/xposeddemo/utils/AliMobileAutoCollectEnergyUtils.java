@@ -92,7 +92,6 @@ public class AliMobileAutoCollectEnergyUtils {
         stringBuilder.append("一共收取了");
         stringBuilder.append(totalEnergy);
         stringBuilder.append("g能量");
-        showToast(stringBuilder.toString());
         isWebViewRefresh = true;
     }
 

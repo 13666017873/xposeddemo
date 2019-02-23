@@ -20,8 +20,7 @@ public class XposedHook implements IXposedHookLoadPackage {
     private static boolean first = false;
 
     private class ApplicationAttachMethodHook extends XC_MethodHook {
-        private ApplicationAttachMethodHook() {
-        }
+        private ApplicationAttachMethodHook() {}
 
         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
             super.afterHookedMethod(param);
