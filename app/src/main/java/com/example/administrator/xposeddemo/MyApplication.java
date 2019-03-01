@@ -16,19 +16,16 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        initValue();
         mContext = this.getApplicationContext();
         LitePal.initialize(this);
     }
 
-    private void initValue() {
-        startAlarmTask(this);
-    }
-
-    public static void startAlarmTask(Context mContext) {
+    public static void startAlarmTask(Context mContext, int hour, int minu) {
         Intent intent = new Intent(mContext, AccessibilityServiceMonitor.class);
         intent.setAction(AccessibilityServiceMonitor.ACTION_ALAM_TIMER);
-        AlarmTaskUtil.starRepeatAlarmTaskByService(mContext, 13, 41, 0, intent);
+        intent.putExtra("hour", hour);
+        intent.putExtra("minu", minu);
+        AlarmTaskUtil.starRepeatAlarmTaskByService(mContext, hour, minu, 0, intent);
     }
 
 

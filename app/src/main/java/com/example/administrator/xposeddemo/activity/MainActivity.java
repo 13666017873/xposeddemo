@@ -18,6 +18,7 @@ import com.example.administrator.xposeddemo.activity.adapter.MainAdapter;
 import com.example.administrator.xposeddemo.bean.TimeBean;
 import com.example.administrator.xposeddemo.service.AccessibilityServiceMonitor;
 import com.example.administrator.xposeddemo.service.AlipayForestMonitor;
+import com.example.administrator.xposeddemo.utils.AlarmTaskUtil;
 import com.example.administrator.xposeddemo.utils.Config;
 import com.example.administrator.xposeddemo.utils.ShareUtil;
 
@@ -104,6 +105,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             minu1 = minu1.substring(1,2);
                         }
 
+                        if(honr1.equals(String.valueOf(hour)) && minu1.equals(String.valueOf(minu))){
+                            MyApplication.startAlarmTask(MyApplication.getContext(), hour, minu);
+                        }
+
                         ShareUtil shareUtil = new ShareUtil(MyApplication.getContext());
                         shareUtil.setShare(Config.KEY_HOUR, honr1);
                         shareUtil.setShare(Config.KEY_MINUTE, minu1);
@@ -118,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.activity_main_start_listerner) {
-            handler.postDelayed(runnable, 1000); // 开始Timer
+            handler.postDelayed(runnable, 0); // 开始Timer
             Toast.makeText(this, "开始监听",Toast.LENGTH_SHORT).show();
         }
         if (view.getId() == R.id.activity_main_end_listerner) {

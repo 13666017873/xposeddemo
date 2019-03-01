@@ -60,7 +60,9 @@ public class AccessibilityServiceMonitor extends AccessibilityService {
         if (ACTION_UPDATE_SWITCH.equals(action)) {
             updateSwitchStatus();
         } else if (ACTION_ALAM_TIMER.equals(action)) {
-            MyApplication.startAlarmTask(this);
+            int hour = intent.getIntExtra("hour", 0);
+            int minu = intent.getIntExtra("minu", 0);
+            MyApplication.startAlarmTask(this, hour, minu);
             startUI();
         }
 
